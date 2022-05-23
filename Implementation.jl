@@ -1,5 +1,6 @@
-include("2nd.jl")
+include("Functions.jl")
 
+#Bootstrap
 A = [0.8 0 0 0.5 0; 0 0.75 0 0 0.5; 0 0 0.75 0 0; 0 0 0 0.6 0; 0 0 0 0 0.6];  n = 1000
 Cov = randn(100,3);  Cov = eigvecs(eigen(Cov*Cov'))[:,100:-1:98]
 m = 100;  R1 = trunc.(Int,zeros(25,m));  R2 = trunc.(Int,zeros(25,m))
@@ -30,15 +31,13 @@ reshape(((R2-(A.==0)[:]*ones(1,m)).^2)*ones(m),5,5)
 sum(reshape(((R1-(A.==0)[:]*ones(1,m)).^2)*ones(m),5,5))
 sum(reshape(((R2-(A.==0)[:]*ones(1,m)).^2)*ones(m),5,5))
 
-
-include("2nd.jl")
-
-
+#Introduction Graphs
 PlotPieceCon(0:4,0:4,title="Regular case",save="Ind_1")
 PlotPieceCon([0; 1; 2.5; 3.5; 4],0:4,title="One generator increases quantity",save="Ind_2")
 PlotPieceCon(0:4,0:4,typ="lin",title="h in the regular case",save="Ind_3")
 PlotPieceCon([0; 1; 2.5; 3.5; 4],[0; 1; 2; 3; 4],typ="lin",title="h used to simulate increased quantity",save="Ind_4")
 
+#Data Initialization
 B = GetData(1:3,typ="BID")
 D = GetData(1:3)
 p_high = D[1][D[3][1]];  q_high = D[2][D[3][1]]
@@ -67,9 +66,6 @@ PlotPieceCon(Clu_mean,FitPCA(Data_Xtil,Clu_mean,d=d_f,coefs=true,typ="con")[2],l
 PlotPieceCon(Clu_mean,FitPCA(Data_Xtil,Clu_mean,d=d_f,coefs=false,typ="con"), title = "Fitted Functions: d = $d_f, Jan-Mar 2019", save = "jan_mar_2019_trun_fit_5",axes=["quantity","price per unit"])
 
 #Warping
-
-include("2nd.jl")
-
 t_i = [Clu_mean[1:10:Clu]; Clu_mean[Clu]]
 W = FirstOrderWarpFit(Data_Xtil,Clu_mean,t_i,0,typ="con",tol=0.001,Ter=20)
 pves = FitPCA(W[2],Clu_mean,d=0,coefs=true)[4][Clu:-1:Clu-9]/sum(FitPCA(W[2],Clu_mean,d=0,coefs=true)[4])
@@ -139,8 +135,6 @@ PlotPieceCon(Clu_meanI,FitPCA(Data_Xtil,Clu_meanI,d=d_f,coefs=true,typ="con")[3]
 PlotPieceCon(Clu_meanI,FitPCA(Data_Xtil,Clu_meanI,d=d_f,coefs=true,typ="con")[2],legend = :topright, label = ["e1" "e2" "e3" "e4"], title = "Eigenfunctions: d = $d_f, Jan-Mar 2019",save="jan_mar_2019_inv_eig_4",axes=["price per unit","quantity"])
 PlotPieceCon(Clu_meanI,FitPCA(Data_Xtil,Clu_meanI,d=d_f,coefs=false,typ="con"), title = "Fitted Supply Model B: d = $d_f, Jan-Mar 2019",save="jan_mar_2019_inv_fit_4",axes=["price per unit","quantity"])
 
-include("2nd.jl")
-
 Scores = FitPCA(Data_Xtil,Clu_meanI,d = d_f,coefs=true,typ="con")[1]
 histogram(Scores',legend = :topleft, label = ["s1" "s2" "s3" "s4"], title = "Scores for Model B: d = $d_f, Jan-Mar 2019")
 X = CorrectSeasonality(Scores,Ind_Hour,3,true)[1]
@@ -159,8 +153,6 @@ Restrict1 = trunc.(Int,ConfidenceInterval(Boot,d_f,d_f,[0.025; 0.975])[1])
 Restrict2 = trunc.(Int,ConfidenceInterval(Boot2,d_f,d_f,[0.025; 0.975])[1])
 
 Data_Ftil = TruncateData(E[2],E[1],E[3],Clu_meanI,E[4],Max=100000,ex_ends=false)
-
-include("2nd.jl")
 
 sum(Data_Ftil)
 
